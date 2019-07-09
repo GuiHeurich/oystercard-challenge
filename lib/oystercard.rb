@@ -4,11 +4,13 @@ MAXIMUM_BALANCE = 90
 MINIMUM_BALANCE = 1
 MINIMUM_FARE = 3
 
-attr_reader :balance, :entry_station
+attr_reader :balance, :entry_station, :exit_station, :list_of_journeys
 
   def initialize
     @balance = 0
     @entry_station
+    @exit_station
+    @list_of_journeys = []
   end
 
   def top_up(money)
@@ -23,8 +25,10 @@ attr_reader :balance, :entry_station
     in_journey?
   end
 
-  def touch_out
+  def touch_out(station)
     deduct
+    @exit_station = station
+    @list_of_journeys.push("Entry station: #{@entry_station}" => "Exit station: #{@exit_station}")
     @entry_station = nil
     in_journey?
   end

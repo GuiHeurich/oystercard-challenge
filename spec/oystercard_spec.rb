@@ -4,6 +4,7 @@ describe Oystercard do
 
   subject(:oystercard) { described_class.new }
   let(:station) { double :station, name: "Barking" }
+  let(:station_two) { double :station_two, name: "Gospel Oak"}
 
   describe '#balance' do
     context 'when a user needs to know its balance' do
@@ -43,9 +44,6 @@ describe Oystercard do
       end
     end
 
-    # In order to pay for my journey
-    # As a customer
-    # I need to know where I've travelled from
     context 'when a user touches in' do
       it 'remembers the entry station' do
         oystercard.top_up(20)
@@ -59,15 +57,39 @@ describe Oystercard do
     context 'when a user needs to use public transport' do
       it 'they touch in their card' do
         expect(oystercard).to respond_to(:touch_out)
-        expect(oystercard.touch_out).to eq(false)
+        expect(oystercard.touch_out(station_two)).to eq(false)
       end
     end
 
     context 'when a user needs to use public transport' do
       it 'they touch in their card' do
         oystercard.top_up(20)
-        expect { oystercard.touch_out }.to change { oystercard.balance }.by(-3)
+        expect { oystercard.touch_out(station_two) }.to change { oystercard.balance }.by(-3)
+      end
+    end
+
+    context 'when a user touches out' do
+      it 'remembers the exit station' do
+        oystercard.top_up(20)
+        oystercard.touch_in(station)
+        oystercard.touch_out(station_two)
+        expect(oystercard.exit_station).to eq(station_two)
       end
     end
   end
+
+  # In order to pay for my journey
+  # As a customer
+  # I need to pay for my journey when it's complete
+  describe '#list_of_journeys' do
+    context 'when a user touches in and out' do
+      it 'remembers the journey' do
+        oystercard.top_up(20)
+        oystercard.touch_in(station)
+        oystercard.touch_out(station_two)
+        expect(oystercard.list_of_journeys[0]).to eq("Entry station: #{station}" => "Exit station: #{station_two}")
+      end
+    end
+  end
+
 end
