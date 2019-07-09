@@ -1,6 +1,7 @@
 class Oystercard
 
 MAXIMUM_BALANCE = 90
+MINIMUM_BALANCE = 1
 FARE = 3
 
 attr_reader :balance
@@ -11,7 +12,7 @@ attr_reader :balance
   end
 
   def top_up(money)
-    raise "Maximum balance is #{MAXIMUM_BALANCE} pounds!" if allowed?(money)
+    raise "Maximum balance is £#{MAXIMUM_BALANCE}!" if allowed?(money)
     @balance += money
     return money
   end
@@ -22,6 +23,7 @@ attr_reader :balance
   end
 
   def touch_in
+    raise "Minimum balance is £#{MINIMUM_BALANCE}!" if minimum_balance?
     @in_journey = true
     in_journey?
   end
@@ -40,5 +42,9 @@ private
 
   def in_journey?
     @in_journey == true
+  end
+
+  def minimum_balance?
+    @balance < MINIMUM_BALANCE
   end
 end

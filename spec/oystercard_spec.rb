@@ -23,7 +23,7 @@ describe Oystercard do
 
     context 'when a user tries to add more than 90 pounds' do
       it 'raises an error' do
-        expect { oystercard.top_up(100) }.to raise_error("Maximum balance is 90 pounds!")
+        expect { oystercard.top_up(100) }.to raise_error("Maximum balance is £90!")
       end
     end
   end
@@ -37,14 +37,18 @@ describe Oystercard do
     end
   end
 
-  # In order to get through the barriers
-  # As a customer
-  # I need to touch in and out
   describe '#touch_in' do
     context 'when a user needs to use public transport' do
       it 'they touch in their card' do
-        expect(oystercard).to respond_to(:touch_in)
+        oystercard.top_up(20)
         expect(oystercard.touch_in).to eq(true)
+      end
+    end
+
+    context 'when a card does not have the minimum balance' do
+      it 'raises an error to prevent touch in' do
+        p oystercard.balance
+        expect {oystercard.touch_in }.to raise_error("Minimum balance is £1!")
       end
     end
   end
