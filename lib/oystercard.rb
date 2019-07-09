@@ -1,6 +1,7 @@
 class Oystercard
 
 MAXIMUM_BALANCE = 90
+FARE = 3
 
 attr_reader :balance
 
@@ -16,5 +17,10 @@ attr_reader :balance
       @balance += money
       return money
     end
+  end
+
+  def deduct
+    @balance -= FARE
+    return FARE
   end
 end
