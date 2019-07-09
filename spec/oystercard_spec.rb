@@ -78,9 +78,6 @@ describe Oystercard do
     end
   end
 
-  # In order to pay for my journey
-  # As a customer
-  # I need to pay for my journey when it's complete
   describe '#list_of_journeys' do
     context 'when a user touches in and out' do
       it 'remembers the journey' do
@@ -91,5 +88,4 @@ describe Oystercard do
       end
     end
   end
-
 end
