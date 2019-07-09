@@ -28,9 +28,6 @@ describe Oystercard do
     end
   end
 
-  # In order to pay for my journey
-  # As a customer
-  # I need my fare deducted from my card
   describe '#deduct' do
     context 'when a user needs to use public transport' do
       it 'money gest deducted from their card' do
@@ -40,4 +37,24 @@ describe Oystercard do
     end
   end
 
+  # In order to get through the barriers
+  # As a customer
+  # I need to touch in and out
+  describe '#touch_in' do
+    context 'when a user needs to use public transport' do
+      it 'they touch in their card' do
+        expect(oystercard).to respond_to(:touch_in)
+        expect(oystercard.touch_in).to eq(true)
+      end
+    end
+  end
+
+  describe '#touch_out' do
+    context 'when a user needs to use public transport' do
+      it 'they touch in their card' do
+        expect(oystercard).to respond_to(:touch_out)
+        expect(oystercard.touch_out).to eq(false)
+      end
+    end
+  end
 end
