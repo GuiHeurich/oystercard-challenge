@@ -4,11 +4,11 @@ MAXIMUM_BALANCE = 90
 MINIMUM_BALANCE = 1
 MINIMUM_FARE = 3
 
-attr_reader :balance
+attr_reader :balance, :entry_station
 
   def initialize
     @balance = 0
-    @in_journey
+    @entry_station
   end
 
   def top_up(money)
@@ -17,15 +17,15 @@ attr_reader :balance
     return money
   end
 
-  def touch_in
+  def touch_in(station)
     raise "Minimum balance is £#{MINIMUM_BALANCE}!" if minimum_balance?
-    @in_journey = true
+    @entry_station = station
     in_journey?
   end
 
   def touch_out
     deduct
-    @in_journey = false
+    @entry_station = nil
     in_journey?
   end
 
@@ -42,7 +42,7 @@ private
   end
 
   def in_journey?
-    @in_journey == true
+    @entry_station != nil
   end
 
   def minimum_balance?

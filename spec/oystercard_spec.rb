@@ -3,6 +3,7 @@ require 'oystercard'
 describe Oystercard do
 
   subject(:oystercard) { described_class.new }
+  let(:station) { double :station, name: "Barking" }
 
   describe '#balance' do
     context 'when a user needs to know its balance' do
@@ -32,14 +33,24 @@ describe Oystercard do
     context 'when a user needs to use public transport' do
       it 'they touch in their card' do
         oystercard.top_up(20)
-        expect(oystercard.touch_in).to eq(true)
+        expect(oystercard.touch_in(station)).to eq(true)
       end
     end
 
     context 'when a card does not have the minimum balance' do
       it 'raises an error to prevent touch in' do
-        p oystercard.balance
-        expect {oystercard.touch_in }.to raise_error("Minimum balance is £1!")
+        expect { oystercard.touch_in(station) }.to raise_error("Minimum balance is £1!")
+      end
+    end
+
+    # In order to pay for my journey
+    # As a customer
+    # I need to know where I've travelled from
+    context 'when a user touches in' do
+      it 'remembers the entry station' do
+        oystercard.top_up(20)
+        oystercard.touch_in(station)
+        expect(oystercard.entry_station).to eq(station)
       end
     end
   end
@@ -51,13 +62,7 @@ describe Oystercard do
         expect(oystercard.touch_out).to eq(false)
       end
     end
-  end
 
-  # In order to pay for my journey
-  # As a customer
-  # I need to pay for my journey when it's complete
-
-  describe '#touch_out' do
     context 'when a user needs to use public transport' do
       it 'they touch in their card' do
         oystercard.top_up(20)
