@@ -10,17 +10,20 @@ attr_reader :balance
   end
 
   def top_up(money)
-    new_balance = @balance += money
-    if new_balance > MAXIMUM_BALANCE
-      raise "Maximum balance is #{MAXIMUM_BALANCE} pounds!"
-    else
-      @balance += money
-      return money
-    end
+    raise "Maximum balance is #{MAXIMUM_BALANCE} pounds!" if allowed?(money)
+    @balance += money
+    return money
   end
 
   def deduct
     @balance -= FARE
     return FARE
+  end
+
+private
+
+  def allowed?(money)
+    new_balance = @balance += money
+    new_balance > MAXIMUM_BALANCE
   end
 end
