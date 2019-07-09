@@ -28,15 +28,6 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    context 'when a user needs to use public transport' do
-      it 'money gest deducted from their card' do
-        expect(oystercard).to respond_to(:deduct)
-        expect(oystercard.deduct).to eq(3)
-      end
-    end
-  end
-
   describe '#touch_in' do
     context 'when a user needs to use public transport' do
       it 'they touch in their card' do
@@ -58,6 +49,19 @@ describe Oystercard do
       it 'they touch in their card' do
         expect(oystercard).to respond_to(:touch_out)
         expect(oystercard.touch_out).to eq(false)
+      end
+    end
+  end
+
+  # In order to pay for my journey
+  # As a customer
+  # I need to pay for my journey when it's complete
+
+  describe '#touch_out' do
+    context 'when a user needs to use public transport' do
+      it 'they touch in their card' do
+        oystercard.top_up(20)
+        expect { oystercard.touch_out }.to change { oystercard.balance }.by(-3)
       end
     end
   end

@@ -32,7 +32,7 @@ As a customer
 I need to touch in and out
 
 In order to pay for my journey
-As a customer
+As a customer a
 I need to have the minimum amount for a single journey
 
 In order to pay for my journey

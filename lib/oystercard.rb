@@ -2,7 +2,7 @@ class Oystercard
 
 MAXIMUM_BALANCE = 90
 MINIMUM_BALANCE = 1
-FARE = 3
+MINIMUM_FARE = 3
 
 attr_reader :balance
 
@@ -17,11 +17,6 @@ attr_reader :balance
     return money
   end
 
-  def deduct
-    @balance -= FARE
-    return FARE
-  end
-
   def touch_in
     raise "Minimum balance is £#{MINIMUM_BALANCE}!" if minimum_balance?
     @in_journey = true
@@ -29,11 +24,17 @@ attr_reader :balance
   end
 
   def touch_out
+    deduct
     @in_journey = false
     in_journey?
   end
 
 private
+
+  def deduct
+    @balance -= MINIMUM_FARE
+    return MINIMUM_FARE
+  end
 
   def allowed?(money)
     new_balance = @balance += money
