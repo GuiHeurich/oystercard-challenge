@@ -6,10 +6,6 @@ describe Journey do
   let(:station) { double :station, name: "Barking", zone: 3 }
   let(:station_two) { double :station_two, name: "Gospel Oak", zone: 1}
 
-  # In order to be charged correctly
-  # As a customer
-  # I need a penalty charge deducted if I fail to touch in or out
-
   describe '#start_journey' do
     context 'when a user touches in' do
       it 'records the entry station' do
