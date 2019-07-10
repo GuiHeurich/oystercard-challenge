@@ -5,6 +5,7 @@ describe Oystercard do
   subject(:oystercard) { described_class.new }
   let(:station) { double :station, name: "Barking" }
   let(:station_two) { double :station_two, name: "Gospel Oak"}
+  let(:journey) { double :journey }
 
   describe '#balance' do
     context 'when a user needs to know its balance' do
@@ -34,46 +35,35 @@ describe Oystercard do
     context 'when a user needs to use public transport' do
       it 'they touch in their card' do
         oystercard.top_up(20)
-        expect(oystercard.touch_in(station)).to eq(true)
+        allow(journey).to receive(:start_journey)
+        expect(oystercard).to respond_to(:touch_in)
       end
     end
 
     context 'when a card does not have the minimum balance' do
       it 'raises an error to prevent touch in' do
-        expect { oystercard.touch_in(station) }.to raise_error("Minimum balance is £1!")
-      end
-    end
-
-    context 'when a user touches in' do
-      it 'remembers the entry station' do
-        oystercard.top_up(20)
-        oystercard.touch_in(station)
-        expect(oystercard.entry_station).to eq(station)
+        expect { oystercard.touch_in(station, journey) }.to raise_error("Minimum balance is £1!")
       end
     end
   end
 
   describe '#touch_out' do
     context 'when a user needs to use public transport' do
-      it 'they touch in their card' do
+      it 'they touch out their card' do
         expect(oystercard).to respond_to(:touch_out)
-        expect(oystercard.touch_out(station_two)).to eq(false)
       end
     end
 
     context 'when a user needs to use public transport' do
-      it 'they touch in their card' do
+      it 'they touch out their card' do
         oystercard.top_up(20)
+        allow(journey).to receive(:start_journey)
+        oystercard.touch_in(station, journey)
+        allow(journey).to receive(:end_journey)
+        allow(journey).to receive(:entry_station).and_return(station)
+        allow(journey).to receive(:exit_station).and_return(station_two)
+        allow(journey).to receive(:fare).and_return(3)
         expect { oystercard.touch_out(station_two) }.to change { oystercard.balance }.by(-3)
-      end
-    end
-
-    context 'when a user touches out' do
-      it 'remembers the exit station' do
-        oystercard.top_up(20)
-        oystercard.touch_in(station)
-        oystercard.touch_out(station_two)
-        expect(oystercard.exit_station).to eq(station_two)
       end
     end
   end
@@ -82,7 +72,12 @@ describe Oystercard do
     context 'when a user touches in and out' do
       it 'remembers the journey' do
         oystercard.top_up(20)
-        oystercard.touch_in(station)
+        allow(journey).to receive(:start_journey)
+        oystercard.touch_in(station, journey)
+        allow(journey).to receive(:end_journey)
+        allow(journey).to receive(:entry_station).and_return(station)
+        allow(journey).to receive(:exit_station).and_return(station_two)
+        allow(journey).to receive(:fare).and_return(3)
         oystercard.touch_out(station_two)
         expect(oystercard.list_of_journeys[0]).to eq("Entry station: #{station}" => "Exit station: #{station_two}")
       end
