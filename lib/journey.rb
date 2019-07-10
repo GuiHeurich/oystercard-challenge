@@ -20,7 +20,7 @@ PENALTY = 6
   end
 
   def fare
-    if @entry_station == nil
+    if @entry_station == nil || @exit_station == nil
       PENALTY
     else
       @entry_station = nil

@@ -38,9 +38,16 @@ describe Journey do
       end
     end
 
-    context 'when a user does not touch in or out' do
+    context 'when a user does not touch in' do
       it 'calcutates a penalty' do
         journey.end_journey(station_two)
+        expect(journey.fare).to eq(6)
+      end
+    end
+
+    context 'when a user does not touch out' do
+      it 'calcutates a penalty' do
+        journey.start_journey(station)
         expect(journey.fare).to eq(6)
       end
     end
